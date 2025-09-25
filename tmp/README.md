@@ -1,1 +1,1 @@
-![version](https://img.shields.io/badge/Python-3.13.5-blue?logo=python)](https://python.org)![stars](https://img.shields.io/github/stars/AlLCWGithub/tudeer)
+[![version](https://img.shields.io/badge/Python-3.13.5-blue?logo=python)](https://python.org) ![stars](https://img.shields.io/github/stars/AlLCWGithub/tudeer)
