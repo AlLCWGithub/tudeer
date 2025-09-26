@@ -1,3 +1,4 @@
+# Note that for max optimisation it would be good to put these global variables inside the function below as accessing global scope is slower
 KEYWORDS = {
 "tutu", "deerdeer", "pikachu", "duckduck", "cookiemonster", "bluedrink", "return", "if", "else", "elif", "while", "for", "print", "True", "False"
 }
@@ -10,10 +11,12 @@ OPERATORS = {
 '==', '!=', '<=', '>=', '&&', '||', '+', '-', '*', '/', '<', '>', '='
 }
 
+
 def tokenise(source):
 	tokens = []
 	i = 0
-	while i < len(source):
+	srclen = len(source) # Lower function calls
+	while i < srclen:
 		c = source[i]
 		if c.isspace():
 			i += 1
@@ -21,7 +24,7 @@ def tokenise(source):
 		elif c.isdigit():
 			num = c
 			i += 1
-			while i < len(source) and (source[i].isdigit() or source[i] == '.'):
+			while i < srclen and (source[i].isdigit() or source[i] == '.'):
 				num += source[i]
 				i += 1
 			tokens.append(('NUMBER', float(num) if '.' in num else int(num)))
@@ -29,13 +32,10 @@ def tokenise(source):
 		elif c.isalpha():
 			ident = c
 			i += 1
-			while i < len(source) and (source[i].isalnum() or source[i] == "_"):
+			while i < srclen and (source[i].isalnum() or source[i] == "_"):
 				ident += source[i]
 				i += 1
-			if ident in KEYWORDS:
-				tokens.append(("KEYWORD", ident))
-			else:
-				tokens.append(("IDENT", ident))
+			tokens.append(("KEYWORD" if ident in KEYWORDS else "IDENT", ident)) # Added ternary operator which is more compact
 			continue
 		matched = False
 		for op in sorted(OPERATORS, key=len, reverse=True):
@@ -53,11 +53,11 @@ def tokenise(source):
 			quote = c
 			i += 1
 			stringval = ""
-			while i < len(source) and source[i] != quote:
+			while i < srclen and source[i] != quote:
 				stringval += source[i]
 				i += 1
-			if i >= len(source):
-				raise ValueError("Unterminatd string")
+			if i >= srclen:
+				raise ValueError("Unterminated string")
 			i += 1
 			tokens.append(("STRING", stringval))
 			continue
